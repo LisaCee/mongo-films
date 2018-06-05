@@ -22,6 +22,7 @@ router
         const { id } = req.params;
 
         Character.findById(id)
+        .populate('homeworld', 'name')
         .then(character => {
             res.status(200).json(character);
         })

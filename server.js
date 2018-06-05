@@ -2,12 +2,6 @@ const express = require('express');
 const helmet = require('helmet');
 
 const db = require('./data/db.js');
-const Characters = require('./characters/Character.js');
-const Planets = require('./planets/Planet.js');
-const Films = require('./films/Film.js');
-const Species = require('./species/Specie.js');
-const Starships = require('./starships/Starship.js');
-const Vehicles = require('./vehicles/Vehicle.js');
 
 const charactersRouter = require('./characters/charactersRouter.js');
 const filmsRouter = require('./films/filmsRouter.js');
