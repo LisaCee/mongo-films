@@ -10,6 +10,8 @@ router.route('/')
         let query = Film
             .find()
             query.sort('episode')
+    
+            .select('_id name gender height skin_color hair_color eye_color')
             .then(films => {
                 res.status(200).json(films)
             })
