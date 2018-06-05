@@ -9,6 +9,12 @@ const starshipsRouter = require('./starships/starshipsRouter.js');
 const vehiclesRouter = require('./vehicles/vehiclesRouter.js');
 const planetsRouter = require('./planets/planetsRouter.js');
 
+const Starship = require('./starships/Starship');
+const Vehicle = require('./vehicles/Vehicle');
+const Planet = require('./planets/Planet');
+const Character = require('./characters/Character');
+const Species = require('./species/Specie');
+
 const server = express();
 
 db
