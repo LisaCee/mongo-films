@@ -26,9 +26,12 @@ server.use('/api/starships', starshipsRouter);
 server.use('/api/vehicles', vehiclesRouter);
 server.use('/api/planets', planetsRouter);
 
-server.get('/', (req, res) => res.send('API Running....'));
+server.get('/', (req, res) => res.send('API Running...'));
 
 const port = process.env.PORT || 5000;
 server.listen(port, () =>
   console.log(`\n\nAPI running on http://localhost:${port}`)
 );
+
+
+mongoimport --db starwars --collection vehicles --file vehicles.json
