@@ -11,7 +11,7 @@ const Film = new mongoose.Schema({
   director: String,
   release_date: String,
   opening_crawl: String,
-  character_ids: [Number],
+  character_ids: [{type:Schema.Types.ObjectId,ref:'Character'}],
   specie_ids: [Number],
   key: { type: Number, unique: true },
   starship_ids: [Number],
