@@ -20,7 +20,19 @@ router.route('/')
             })
     });
 
-
+router.route('/?')    
+    .get((req, res) => {
+        let query = req.body;
+        console.log('QUERY', query)
+        Character
+            .find(query)
+            .then(films => {
+                res.status(200).json(films)
+            })
+            .catch(err => {
+                res.sendStatus(500);
+            })
+    })
 
 
 module.exports = router;

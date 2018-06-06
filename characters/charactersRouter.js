@@ -17,4 +17,22 @@ router.route('/')
             })
     })
 
+router.route('/:id')
+    .get((req, res) => {
+        const { id } = req.params;
+        console.log('ID', id)
+        Character
+            .findById(id)
+            .then(character => {
+                if (character !== null) {
+                 res.status(200).json(character);
+                } else {
+                    res.sendStatus(404);
+                }
+            })
+            .catch(err => {
+                res.status(500).json(err);
+            })
+    })
+
 module.exports = router;
