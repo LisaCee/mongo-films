@@ -9,9 +9,7 @@ router.route('/')
     .get((req, res) => {
         let query = Film
             .find()
-            query.sort('episode')
-    
-            // .select('_id name gender height skin_color hair_color eye_color')
+        query.sort('episode')
             .then(films => {
                 res.status(200).json(films)
             })
@@ -20,19 +18,16 @@ router.route('/')
             })
     });
 
-router.route('/?')    
-    .get((req, res) => {
-        let query = req.body;
-        console.log('QUERY', query)
-        Character
-            .find(query)
-            .then(films => {
-                res.status(200).json(films)
-            })
-            .catch(err => {
-                res.sendStatus(500);
-            })
-    })
+// router.route('/')
+//     .get((req, res) => {   
+//         const { year } = req.query;
+//         console.log('YEAR', year);
+//         let query = Film
+//             .find()
+//         query.where({ year: year })
+//             .then(films => res.status(200).json(films))
+//             .catch(err => res.status(500).json(err));
+//     })
 
 
 module.exports = router;

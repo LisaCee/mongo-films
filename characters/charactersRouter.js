@@ -7,11 +7,15 @@ const router = express.Router();
 // add endpoints here
 router.route('/')
     .get((req, res) => {
-        Character
+        const { gender, minheight } = req.query
+        const query = Character
             .find()
-            .then(characters => {
-                res.status(200).json(characters)
-            })
+        if (gender !== undefined) {
+            query.where({ gender: gender })
+        }
+        query.then(characters => {
+            res.status(200).json(characters)
+        })
             .catch(err => {
                 res.sendStatus(500);
             })
@@ -20,12 +24,11 @@ router.route('/')
 router.route('/:id')
     .get((req, res) => {
         const { id } = req.params;
-        console.log('ID', id)
         Character
             .findById(id)
             .then(character => {
                 if (character !== null) {
-                 res.status(200).json(character);
+                    res.status(200).json(character);
                 } else {
                     res.sendStatus(404);
                 }
