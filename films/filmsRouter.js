@@ -11,13 +11,16 @@ router.route('/')
             .find()
             query.sort('episode')
     
-            .select('_id name gender height skin_color hair_color eye_color')
+            // .select('_id name gender height skin_color hair_color eye_color')
             .then(films => {
                 res.status(200).json(films)
             })
             .catch(err => {
                 res.sendStatus(500);
             })
-    })
+    });
+
+
+
 
 module.exports = router;
