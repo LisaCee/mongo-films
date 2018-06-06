@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const ObjectId = mongoose.Schema.Types.ObjectId;
+
+const { ObjectId } = mongoose.Schema.Types;
 
 const Character = mongoose.Schema({
   name: { type: String, required: true },
@@ -15,7 +16,7 @@ const Character = mongoose.Schema({
   homeworld_key: Number,
   homeworld: {
     type: ObjectId,
-    ref: 'Planet'
+    ref: 'Planet',
   },
 });
 
