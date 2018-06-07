@@ -9,6 +9,8 @@ router.route('/')
   .get((req, res) => {
     const { producer, released } = req.query;
     let query = Film.find().sort('episode')
+      .populate('planets', 'climate name terrain gravity diameter -_id')
+      .populate('characters', 'name gender height skin_color hair_color eye_color')
 
     if (producer !== undefined) {
       query.where({"producer": RegExp(producer, 'i')})
