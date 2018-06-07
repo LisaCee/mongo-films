@@ -42,6 +42,9 @@ router.route('/:id')
         const [ movies, character ] = results;
         res.status(200).json({ character, movies })
       })
+      .catch(error => {
+        res.sendStatus(500);
+      })
   })
 
 router.route('/:id/vehicles')
