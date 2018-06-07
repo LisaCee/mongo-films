@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 
     let query = Film.find()
         .sort('episode')
-        .select('episode title planets characters producer released_date')
+        .select('episode title planets characters producer release_date')
         .populate('planets', 'name climate terrain gravity diameter -_id')
         .populate('characters', 'name gender height skin_color hair_color eye_color')
     if (producer !== undefined) {
