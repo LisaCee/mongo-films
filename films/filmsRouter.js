@@ -9,15 +9,9 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     Film.find()
-      .sort('episode')
-      .select('title producer relase_date')
-      .populate('characters', '_id, name, gender, height, skin_color, hair_color, eye_color')
-      .then(response => {
-          res.json(response);
-      })
-      .catch(err => {
-          res.status(500).json(err.message);
-      })
+      .sort('-episode')
+      .select('episode title planets characters')
+      .then( films => res.status(200).json(films))
 })
 
 module.exports = router;

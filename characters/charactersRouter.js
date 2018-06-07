@@ -7,6 +7,15 @@ const router = express.Router();
 // add endpoints here
 router.get('/', (req, res) => {
     Character.find()
+      .then( chars => res.status(200).json({chars: chars}))
+      .catch( err => res.status(500).json(err))
 })
 
+router.get('/:id', (req, res) => {
+    const { id } = req.params;
+    Character.findById(id)
+      .populate('homeworld', 'name climate')
+      .then(char => res.status(200).json(char))
+      .catch(err => res.status(500).json(err))
+})
 module.exports = router;
