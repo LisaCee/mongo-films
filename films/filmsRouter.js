@@ -5,29 +5,24 @@ const Film = require('./Film.js');
 const router = express.Router();
 
 // add endpoints here
-router.route('/')
-    .get((req, res) => {
-        let query = Film
-            .find()
-        query.sort('episode')
-            .then(films => {
-                res.status(200).json(films)
-            })
-            .catch(err => {
-                res.sendStatus(500);
-            })
-    });
+router.get('/', (req, res) => {
+    const { producer, released } = req.query;
 
-// router.route('/')
-//     .get((req, res) => {   
-//         const { year } = req.query;
-//         console.log('YEAR', year);
-//         let query = Film
-//             .find()
-//         query.where({ year: year })
-//             .then(films => res.status(200).json(films))
-//             .catch(err => res.status(500).json(err));
-//     })
+    let query = Film.find()
+        .sort('episode')
+        .select('episode title planets characters producer released_date')
+        .populate('planets', 'name climate terrain gravity diameter -_id')
+        .populate('characters', 'name gender height skin_color hair_color eye_color')
+    if (producer !== undefined) {
+        const filter = new RegExp(producer, 'i')
+        query.where({ producer: filter })
+    }
+    if (released !== undefined) {
+        query.where({ release_date: { $regex: released, $options: 'i' } })
+    }
+    query.then(films => res.status(200).json(films))
+        .catch(err => res.status(500).json(err))
+})
 
 
 module.exports = router;
