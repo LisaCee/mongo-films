@@ -2,6 +2,7 @@ const express = require('express');
 
 const Character = require('./Character.js');
 const Vehicle = require('../vehicles/Vehicle.js');
+const Film = require('../films/Film.js');
 
 
 const router = express.Router();
@@ -10,51 +11,57 @@ router
     .route('/')
     .get((req, res) => {
         const { gender, minheight } = req.query;
-        const query = Character.find()
+        
+        Character.find()
+        .then(characters => {
 
-        if(gender !== undefined) {
-            query.where({ gender: gender })
-        }
-        // if(minheight !== undefined) {
-        //     query.gt({ height: minheight })
-        // }
+            if(gender && minheight !== undefined) {
+                const queryFilter = characters.filter(char => {
+                    return char.gender === gender && char.height >= Number(minheight)
+                });
 
-        query
-            .then(characterObj => {
-                res.status(200).json(characterObj);
+                res.status(200).json(queryFilter);
+
+            } else {
+
+                res.status(200).json(characters);
+            }
+
+        })
+
+    });
+
+    router
+        .route('/:id')
+        .get((req, res) => {
+            const { id } = req.params;
+
+            Character.findById(id)
+            .populate('homeworld', 'name')
+            .then(character => {
+                Film.find({ characters: id })
+                    .select('episode')
+                        .then(film => {
+                            res.status(200).json([character, film])
+                        })
             })
             .catch(err => {
-                res.status(500).json({ errorMessage: "The characters information could not be retrieved." });
+                res.status(500).json({ errorMessage: "The friend with the specified ID does not exist." });
             })
     });
 
     router
-    .route('/:id')
-    .get((req, res) => {
-        const { id } = req.params;
-
-        Character.findById(id)
-        .populate('homeworld', 'name')
-        .then(character => {
-            res.status(200).json(character);
-        })
-        .catch(err => {
-            res.status(500).json({ errorMessage: "The friend with the specified ID does not exist." });
-        })
-    });
-
-    router
-    .route('/:id/vehicle')
-    .get((req, res) => {
-        const { id } = req.params;
+        .route('/:id/vehicle')
+        .get((req, res) => {
+            const { id } = req.params;
         
-        Vehicle.find({ pilots: id })
-        .then(pilots => {
-            res.status(200).json(pilots);
-        })
-        .catch(err => {
-            res.status(500).json({ errorMessage: "The planets information could not be retrieved." });
-        })
+            Vehicle.find({ pilots: id })
+            .then(pilots => {
+                res.status(200).json(pilots);
+            })
+            .catch(err => {
+                res.status(500).json({ errorMessage: "The planets information could not be retrieved." });
+            })
     });
 
 module.exports = router;

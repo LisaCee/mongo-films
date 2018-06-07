@@ -18,6 +18,10 @@ const Character = mongoose.Schema({
     type: ObjectId,
     ref: 'Planet',
   },
+  films: [{
+    type: ObjectId,
+    ref: 'Film',
+  }]
 });
 
 module.exports = mongoose.model('Character', Character);
