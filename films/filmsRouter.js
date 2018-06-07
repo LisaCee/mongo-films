@@ -11,6 +11,7 @@ router.get('/', (req, res) => {
     Film.find()
       .sort('-episode')
       .select('episode title planets characters')
+      .populate('planets')
       .then( films => res.status(200).json(films))
 })
 
