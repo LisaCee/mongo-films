@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
     let query = Film.find()
         .sort('episode')
         .select('title episode -_id release_date producer')
-        // .populate('characters', '_id name gender height skin_color hair_color eye_color')
+        .populate('characters', '_id name gender height skin_color hair_color eye_color')
         .populate('planets', 'name climate terrain gravity diameter')
     if (producer) {
         const producerFilter = new RegExp(producer, 'i')
