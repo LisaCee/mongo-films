@@ -8,9 +8,21 @@ const router = express.Router();
 
 // add endpoints here
 router.get('/', (req, res) => {
-    Character.find()
-        .then(characters => {
-            res.status(200).json(characters);
+    let { gender, minheight } = req.query;
+
+    let query = Character.find()
+    if (gender) {
+        const genderFilter = new RegExp(gender, 'i');
+        query.where({ gender: genderFilter })
+    }
+    if (minheight) {
+        query.where('height').gt(minheight);
+    }
+    query.then(characters => {
+        res.status(200).json(characters);
+    })
+        .catch(err => {
+            res.sendStatus(500);
         })
 })
 router.get('/:id', (req, res) => {
@@ -42,9 +54,9 @@ router.get('/:id/vehicles', (req, res) => {
             if (character) {
                 Vehicle.find({ pilots: id })
                     .select('vehicle_class')
-                .then(vehicles => {
-                    res.status(200).json([character, vehicles])
-                })
+                    .then(vehicles => {
+                        res.status(200).json([character, vehicles])
+                    })
             }
         })
         .catch(err => {
