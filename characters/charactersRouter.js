@@ -8,15 +8,13 @@ const router = express.Router();
 
 // add endpoints here
 router.get('/', (req, res) => {
-    const { gender, minheight } = req.query;
-    const query = Character.find()
-    if (gender !== undefined) {
-        const filter = new RegExp(gender, 'i')
-        query.where({ gender: filter })
+    const { minheight } = req.query;
+
+    let query = Character.find()
+        
+    if (minheight !== undefined) {
+        query.find({gender: 'female'}).where({ height: { $gte: minheight } })
     }
-    // if (minheight !== undefined) {
-    //     query.find().where({ height: { $gte: minheight } })
-    // } //empty array
     query.then(chars => res.status(200).json(chars))
         .catch(err => {
             res.status(500).json(err)
@@ -30,15 +28,15 @@ router.get('/:id', (req, res) => {
         .select('title episode -_id')
         .sort('episode')
 
-    const char = Character.findById(id)  
-        .populate('homeworld', 'name')  
+    const char = Character.findById(id)
+        .populate('homeworld', 'name')
 
     Promise.all([movies, char])
         .then(character => {
             const [movies, char] = character;
-            
+
             if (character !== null) {
-                res.status(200).json({movies, char});
+                res.status(200).json({ movies, char });
             } else {
                 res.status(404).json({ error: 'There is no character with that id' });
             }
@@ -58,10 +56,10 @@ router.get('/:id/vehicles', (req, res) => {
 
     Vehicle.find({ pilots: id })
         .then(pilots => {
-            if(pilots !== undefined) {
+            if (pilots !== undefined) {
                 res.status(200).json(pilots)
             } else {
-                res.status(404).json({message: 'The pilot with that ID does not exist'})
+                res.status(404).json({ message: 'The pilot with that ID does not exist' })
             }
         })
         .catch(err => {
