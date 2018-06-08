@@ -20,17 +20,17 @@ router.get('/', (req, res) => {
         query.where({ producer: filter })
     }
     // native mongo regular expression
-    
+    /*
     if (released) {
         query.where({ release_date: { $regex: released, $options: 'i' } })
     }
-    
-    /*
-    if (released) {
-        const filter = new RegExp(released, 'i')
-        query.where({ released: filter })
-    }
     */
+    
+    if (released) {
+        const releasedFilter = new RegExp(released, 'i')
+        query.where({ release_date: releasedFilter })
+    }
+    
     query.then(films => res.status(200).json(films))
         .catch(err => res.sendStatus(500))
 })
