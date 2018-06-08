@@ -16,8 +16,27 @@ router.get('/', (req, res) => {
     // .where().gt()
     .then(films => res.status(200).json(films))
 })
+
+router.get('/', (req, res) => {
+// Find Films by producer Gary Kurtz(/api/films?producer=gary+kurtz)
+// find all films released in 2005.(/api/films?release=2005)
+  const {producer, released} = req.query
+  // producer: 'Gary Kurtz, Raymon Smith' !== 'gary kurtz'
+  const query = Film.find()
+  if (producer !== undefined) {
+    query.where({producer: { $regex: producer, $options: 'i' }}) // '$ is mongoose internal method
+  }
+  if (released !== undefined) {
+    let releasedFilter = new RegExp(released, 'i')
+    query.where({release_date: releasedFilter})
+    // '1977-05-25' === '1977'
+  }
+
+  query.then(films => res.status(200).json(films))
+    .catch((err => res.sendStatus(500), (err)))
+  
+
 /*
-//Find Films by producer
 // ☞ f40185c8-0030-48ea-b1fd-cb0e2e10e685
 router.get('/', (req, res) => {
   const { producer, released } = req.query

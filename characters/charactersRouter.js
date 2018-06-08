@@ -1,7 +1,7 @@
 const express = require('express')
 
 const Character = require('./Character.js') // imported from same folder as this file so location is on the same level.
-
+const Vehicle = require('../vehicles/Vehicle')
 const router = express.Router()
 
 // add endpoints here
@@ -22,6 +22,27 @@ router.get('/:id', (req, res) => {
     .catch(err => res.status(500).json(err))
 })
 
+// find all females minhight =100
+router.get('/', (req, res) => {
+// /api/characters?minheight=100&&gender=female
+  const {minheight, gender} = req.query
+  let query = Character.find()
+  if (minheight !== undefined) {
+    query.where('height').gte(minheight)
+  }
+  if (gender !== undefined) {
+    query.where({gender})
+  }
+  query.then(chars => res.status(200).json(chars))
+  // MISSING CODE?
+})
+
+router.get('/:id/vehicles', (req, res) => {
+  const {id} = req.params
+  Vehicle.find({pilots: id})
+    .then(Vehicles => res.status(200).json)
+  // !!!MISSING CODE!!
+})
 // OR
 /*
 router.get('/:id', (req, res) => {
@@ -41,10 +62,8 @@ router.get('/:id', (req, res) => {
 
 // Find all vehicles driven by a given character. (/api/characters/:id/vehicles)
 
-
 // Find all female characters taller than 100cm (/api/characters?minheight=100)
 
 // Given a planet Id find all `characters` born in that planet and all native `species`. (/api/planet/:id)
-
 
 module.exports = router
