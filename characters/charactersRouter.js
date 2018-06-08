@@ -2,7 +2,7 @@ const express = require('express');
 
 const Character = require('./Character.js');
 const Vehicle = require('../vehicles/Vehicle');
-// const Film = require('../films/Film');
+const Film = require('../films/Film');
 
 const router = express.Router();
 
@@ -25,11 +25,17 @@ router.get('/', (req, res) => {
 
 router.get('/:id', (req, res) => {
     const { id } = req.params;
-    const moviesIn = Character.find({ movies: id})
-    Character
-        .findById(id)
-        .populate('homeworld', 'name')
-        .populate('movies', 'title')
+
+    const movies = Film.find({ characters: id })
+        .select('title episode')
+
+
+    const char = Character.findById(id)  
+        .populate('homeworld', 'name')  
+    // Character
+    //     .findById(id)
+    Promise.all([movies, char])
+        // .populate('homeworld', 'name')
         .then(character => {
             if (character !== null) {
                 res.status(200).json(character);
@@ -41,6 +47,7 @@ router.get('/:id', (req, res) => {
             res.status(500).json(err);
         })
 })
+
 
 // router.get('/:id/vehicles', (req, res) => {
 //     const { id } = req.params;
