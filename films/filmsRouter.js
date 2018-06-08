@@ -8,12 +8,23 @@ const router = express.Router();
 
 router.get("/", (req, res) => {
     let { producer } = req.query;
+    let { released } = req.query;
     let query, producer_name;
     if (producer !== undefined) {
         producer_name = new RegExp(producer, 'i');
-        query = Film.find({ producer: producer_name })
+        if (released !== undefined) {
+            release_date = new RegExp(released)
+            query = Film.find({ producer: producer_name, release_date: release_date })
+        } else {
+            query = Film.find({ producer: producer_name })
+        }
     } else {
-        query = Film.find()
+        if (released !== undefined) {
+            release_date = new RegExp(released)
+            query = Film.find({ release_date: release_date })
+        } else {
+            query = Film.find()
+        }
     }
     query.sort('episode')
     // Film.find({ producer: { $regex: producer, $options: 'i' } }).sort('episode')
