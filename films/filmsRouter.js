@@ -7,13 +7,11 @@ const router = express.Router();
 
 router.get('/', (req, res) => {
     const { producer , released } = req.query
-    // const characterPop = 
-    //     Film.populate('Character', '_id name gender height skin_color hair_color eye_color')
-    // const planetPop =
-    //     Film.populate('Planet', 'name climate terrain gravity diameter')
     if( producer !== undefined ) {
         const filter = new RegExp(producer, 'i')
-        Film.find({ producer: filter })
+        Film.find({ producer: filter }).sort( { episode: 1 } ).select(
+            '_id episode producer title director release_date opening_crawl characters planets'
+        )
         .populate('characters', '_id name gender height skin_color hair_color eye_color')
         .populate('planets', 'name climate terrain gravity diameter')
         .then((films) => {
@@ -24,9 +22,11 @@ router.get('/', (req, res) => {
         })
     } else if( released !== undefined ) {
         const filter = new RegExp(released, 'i')
-        Film.find({ release_date: filter })
+        Film.find({ release_date: filter }).sort( { episode: 1 } ).select(
+            '_id episode producer title director release_date opening_crawl characters planets'
+        )
         .populate('characters', '_id name gender height skin_color hair_color eye_color')
-        .populate('planets', 'name climate terrain gravity diameter')
+        .populate('planets', 'name climate terrain gravity diameter -_id')
         .then((films) => {
             res.status(200).json(films)
         })
@@ -34,7 +34,9 @@ router.get('/', (req, res) => {
             res.status(500).json(error)
         })
     } else {
-        Film.find().sort( { episode: 1 } )
+        Film.find().sort( { episode: 1 } ).select(
+            '_id episode producer title director release_date opening_crawl characters planets'
+        )
         .populate('characters', '_id name gender height skin_color hair_color eye_color')
         .populate('planets', 'name climate terrain gravity diameter')
         .then((films) => {
